@@ -1,6 +1,15 @@
 # My Portfolio
 
-My developer portfolio, built with React and Vite. Version 1 is a profile page with my name, my goal for this course, and a `StatusBadge` component that shows either "Open to work" (green) or "Busy learning" (gray) depending on a prop.
+My developer portfolio, built with React, Vite, Tailwind CSS, and shadcn/ui.
+
+- **Version 1:** a profile page with my name, my goal for this course, and a `StatusBadge` component that shows either "Open to work" (green) or "Busy learning" (gray) depending on a prop.
+- **Version 2:** restyled with Tailwind CSS and made responsive (one column on phones, main content + sidebar from the `md` breakpoint up). The page is built from reusable components: `Section` (wraps its `children`), `ContactLink`, and a `ProjectCard` composed from shadcn/ui's `Card`, `Badge`, and `Button`.
+
+## Built with
+
+- [React](https://react.dev/) + [Vite](https://vite.dev/)
+- [Tailwind CSS v4](https://tailwindcss.com/)
+- [shadcn/ui](https://ui.shadcn.com/) (components live in `src/components/ui`)
 
 ## Setup
 

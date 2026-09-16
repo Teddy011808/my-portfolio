@@ -1,4 +1,11 @@
-function Section({ title, children }) {
+import type { ReactNode } from 'react'
+
+interface SectionProps {
+  title: string
+  children: ReactNode
+}
+
+function Section({ title, children }: SectionProps) {
   return (
     <section className="rounded-xl bg-white p-6 ring-1 ring-gray-200">
       <h2 className="text-lg font-semibold text-gray-900">{title}</h2>

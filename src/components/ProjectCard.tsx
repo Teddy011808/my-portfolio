@@ -10,8 +10,9 @@ import {
   CardHeader,
   CardTitle,
 } from '@/components/ui/card'
+import type { Project } from '@/types'
 
-function ProjectCard({ title, description, status, tech, href }) {
+function ProjectCard({ title, description, status, tech, href }: Project) {
   const isCompleted = status === 'Completed'
 
   return (

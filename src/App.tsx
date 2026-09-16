@@ -1,9 +1,11 @@
 import ContactLink from '@/components/ContactLink'
+import ProductCatalog from '@/components/ProductCatalog'
 import ProjectCard from '@/components/ProjectCard'
 import Section from '@/components/Section'
 import StatusBadge from '@/components/StatusBadge'
+import type { Project } from '@/types'
 
-const projects = [
+const projects: Project[] = [
   {
     title: 'Developer Portfolio',
     description: 'This site: a responsive profile page built with React, Tailwind CSS, and shadcn/ui.',
@@ -54,8 +56,9 @@ function App() {
             <Section title="About me">
               <p className="text-gray-700">
                 I'm working through a hands-on React course and building this portfolio one lesson at a time.
-                Version 1 was a hand-built profile page; version 2 adds Tailwind CSS, a responsive layout, and
-                components from shadcn/ui.
+                Version 1 was a hand-built profile page; version 2 added Tailwind CSS, a responsive layout, and
+                components from shadcn/ui; version 3 adds a product catalog driven by React state, written in
+                TypeScript.
               </p>
             </Section>
 
@@ -87,6 +90,12 @@ function App() {
               </div>
             </Section>
           </aside>
+        </div>
+
+        <div className="mt-6">
+          <Section title="Product catalog">
+            <ProductCatalog />
+          </Section>
         </div>
 
         <footer className="mt-8 text-center text-sm text-gray-500">

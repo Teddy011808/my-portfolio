@@ -1,4 +1,8 @@
-function StatusBadge({ isOpenToWork }) {
+interface StatusBadgeProps {
+  isOpenToWork: boolean
+}
+
+function StatusBadge({ isOpenToWork }: StatusBadgeProps) {
   const colors = isOpenToWork
     ? 'bg-emerald-50 text-emerald-700 ring-emerald-200'
     : 'bg-gray-100 text-gray-700 ring-gray-200'

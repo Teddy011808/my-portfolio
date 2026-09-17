@@ -1,6 +1,6 @@
 import type { Product, PublicProduct } from '@/types'
 
-export const PRODUCTS_URL = '/api/prodcuts.json'
+export const PRODUCTS_URL = '/api/products.json'
 
 function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null

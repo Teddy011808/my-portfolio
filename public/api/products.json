@@ -1,8 +1,8 @@
 [
-  { "id": 1, "name": "Mechanical Keyboard", "price": 89.99, "costPrice": 52, "inStock": true },
+  { "id": 1, "name": "Mechanical Keyboard", "price": 89.99, "costPrice": 52, "inStock": true, "discount": { "percentOff": 20 } },
   { "id": 2, "name": "Wireless Mouse", "price": 29.5, "costPrice": 14.2, "inStock": true },
   { "id": 3, "name": "USB-C Hub", "price": 39, "costPrice": 21.75, "inStock": false },
   { "id": 4, "name": "Laptop Stand", "price": 45, "costPrice": 19.9, "inStock": true },
   { "id": 5, "name": "Noise-Cancelling Headphones", "price": 199, "costPrice": 128, "inStock": false },
-  { "id": 6, "name": "1080p Webcam", "price": 59.99, "costPrice": 31.4, "inStock": true }
+  { "id": 6, "name": "1080p Webcam", "price": 59.99, "costPrice": 31.4, "inStock": true, "discount": { "percentOff": 15 } }
 ]

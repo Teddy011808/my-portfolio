@@ -6,6 +6,10 @@ export interface Project {
   href: string
 }
 
+export interface ProductDiscount {
+  percentOff: number
+}
+
 export interface Product {
   id: number
   name: string
@@ -13,6 +17,8 @@ export interface Product {
   inStock: boolean
   // Internal: what the store pays its supplier. Never shown to shoppers.
   costPrice: number
+  // Optional: only products on sale have one.
+  discount?: ProductDiscount
 }
 
 // What the storefront may see: a Product without its internal cost.

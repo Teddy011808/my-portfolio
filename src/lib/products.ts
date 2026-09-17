@@ -14,7 +14,8 @@ function isProduct(value: unknown): value is Product {
     typeof value.name === 'string' &&
     typeof value.price === 'number' &&
     typeof value.inStock === 'boolean' &&
-    typeof value.costPrice === 'number'
+    typeof value.costPrice === 'number' &&
+    (value.discount === undefined || (isRecord(value.discount) && typeof value.discount.percentOff === 'number'))
   )
 }
 

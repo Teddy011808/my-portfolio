@@ -18,7 +18,7 @@ const projects: Project[] = [
     description: 'A reusable badge that switches between "Open to work" and "Busy learning" from a single prop.',
     status: 'Completed',
     tech: ['React', 'JSX', 'Props'],
-    href: 'https://github.com/Teddy011808/my-portfolio/blob/main/src/components/StatusBadge.jsx',
+    href: 'https://github.com/Teddy011808/my-portfolio/blob/main/src/components/StatusBadge.tsx',
   },
 ]
 

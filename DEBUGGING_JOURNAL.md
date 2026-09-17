@@ -78,6 +78,17 @@ The discount data arrived at `ProductCard` intact and got lost on the way into `
 
 **Did `tsc` flag it?** Yes: `TS2322: Property 'percentOf' does not exist on type 'IntrinsicAttributes & PriceTagProps'. Did you mean 'percentOff'?` But `npm run dev` doesn't type-check, so the app kept running with the wrong value. This is the case for keeping `npm run typecheck` clean and heeding the red squiggle.
 
+## Audit
+
+The three bugs were AI-generated (Claude Code) on purpose, then checked against the lesson patterns and the audit checklist.
+
+- [x] Bug 1 matches "crash: `.map()` on null state": `useState<Product[] | null>(null)` followed by `products!.map(...)`
+- [x] Bug 2 matches "network failure: mistyped URL": `/api/prodcuts.json`
+- [x] Bug 3 matches "silent wrong value: prop name typo": `percentOf` passed where `PriceTag` reads `percentOff`
+- [x] `npm run typecheck` (`tsc --noEmit`) is clean on `main`
+- [x] No `any` anywhere in `src`; oxlint's `typescript/no-explicit-any` rule fails the lint if one appears
+- [x] Every entry above names the DevTools tool that found the bug: Sources breakpoint, Network tab, React DevTools
+
 ## Which tool caught which bug
 
 A Sources-panel breakpoint caught the crash, the Network tab caught the misspelled URL, and React DevTools caught the prop typo. The console alone wasn't enough: it named the crash without showing why `products` was null, blamed "invalid JSON" instead of the misspelled URL, and said nothing at all about the wrong price.

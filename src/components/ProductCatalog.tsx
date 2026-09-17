@@ -28,7 +28,7 @@ function FilterButton({ isActive, onClick, children }: FilterButtonProps) {
 }
 
 function ProductCatalog() {
-  const [products, setProducts] = useState<Product[] | null>(null)
+  const [products, setProducts] = useState<Product[]>([])
   const [status, setStatus] = useState<LoadStatus>('loading')
   const [inStockOnly, setInStockOnly] = useState(false)
   const [saleCount, setSaleCount] = useState(0)
@@ -39,7 +39,7 @@ function ProductCatalog() {
     fetchProducts()
       .then((loaded) => {
         if (ignore) return
-        setProducts(loaded)
+        setProducts((prev) => [...loaded, ...prev])
         setStatus('success')
       })
       .catch((error: unknown) => {
@@ -52,13 +52,13 @@ function ProductCatalog() {
     }
   }, [])
 
-  const publicProducts = products!.map(toPublicProduct)
+  const publicProducts = products.map(toPublicProduct)
   const visibleProducts = inStockOnly ? publicProducts.filter((product) => product.inStock) : publicProducts
 
   function handleAdd(fields: NewProductFields) {
     setProducts((prev) => [
-      ...prev!,
-      { ...fields, id: Math.max(0, ...prev!.map((product) => product.id)) + 1, inStock: true },
+      ...prev,
+      { ...fields, id: Math.max(0, ...prev.map((product) => product.id)) + 1, inStock: true },
     ])
   }
 

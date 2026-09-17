@@ -3,9 +3,7 @@ import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { validateProduct } from '@/lib/validateProduct'
-import type { NewProductFields, ProductFormData, ProductFormErrors } from '@/types'
-
-const emptyForm: ProductFormData = { name: '', price: '', costPrice: '' }
+import type { NewProductFields, ProductDraft, ProductFormData, ProductFormErrors } from '@/types'
 
 interface FormFieldProps {
   name: keyof ProductFormData
@@ -50,23 +48,27 @@ interface AddProductFormProps {
 }
 
 function AddProductForm({ onAdd }: AddProductFormProps) {
-  const [form, setForm] = useState<ProductFormData>(emptyForm)
+  const [draft, setDraft] = useState<ProductDraft>({})
   const [errors, setErrors] = useState<ProductFormErrors>({})
 
   function handleChange(e: ChangeEvent<HTMLInputElement>) {
     const { name, value } = e.target
-    setForm((prev) => ({ ...prev, [name]: value }))
+    setDraft((prev) => ({ ...prev, [name]: value }))
     setErrors((prev) => ({ ...prev, [name]: undefined }))
   }
 
   function handleSubmit(e: SubmitEvent<HTMLFormElement>) {
     e.preventDefault()
-    const nextErrors = validateProduct(form)
+    const nextErrors = validateProduct(draft)
     setErrors(nextErrors)
     if (Object.keys(nextErrors).length > 0) return
 
-    onAdd({ name: form.name.trim(), price: Number(form.price), costPrice: Number(form.costPrice) })
-    setForm(emptyForm)
+    onAdd({
+      name: draft.name?.trim() ?? '',
+      price: Number(draft.price ?? ''),
+      costPrice: Number(draft.costPrice ?? ''),
+    })
+    setDraft({})
   }
 
   return (
@@ -75,7 +77,7 @@ function AddProductForm({ onAdd }: AddProductFormProps) {
         name="name"
         label="Name"
         placeholder="e.g. Desk lamp"
-        value={form.name}
+        value={draft.name ?? ''}
         error={errors.name}
         onChange={handleChange}
       />
@@ -84,7 +86,7 @@ function AddProductForm({ onAdd }: AddProductFormProps) {
         label="Price (USD)"
         placeholder="e.g. 24.99"
         inputMode="decimal"
-        value={form.price}
+        value={draft.price ?? ''}
         error={errors.price}
         onChange={handleChange}
       />
@@ -93,7 +95,7 @@ function AddProductForm({ onAdd }: AddProductFormProps) {
         label="Cost (USD, internal)"
         placeholder="e.g. 12.50"
         inputMode="decimal"
-        value={form.costPrice}
+        value={draft.costPrice ?? ''}
         error={errors.costPrice}
         onChange={handleChange}
       />

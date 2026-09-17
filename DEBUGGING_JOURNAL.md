@@ -2,6 +2,8 @@
 
 Three bugs were planted in the product catalog on purpose, one commit each, then hunted down and fixed with browser tools. They're numbered in the order they surfaced, because each one hid the next: the crash blanked the whole page, and the network failure stopped any product cards from rendering, so the wrong sale price only showed up once both were fixed.
 
+Screenshots are from Chrome DevTools (Chrome 152) and the standalone React DevTools app (7.0.1), and live in [`docs/debugging/`](docs/debugging/).
+
 | # | Bug | Symptom | Tool that found it | Planted | Fixed | Did `tsc` flag it? |
 |---|-----|---------|--------------------|---------|-------|--------------------|
 | 1 | Crash: `.map()` on null state | Blank page | Sources panel breakpoint | `bef3cd3` | `f25fece` | No |
@@ -12,7 +14,9 @@ Three bugs were planted in the product catalog on purpose, one commit each, then
 
 **Symptom:** The whole page went blank. Nothing rendered inside `#root`, not even the header.
 
-**Console said:** `Uncaught TypeError: Cannot read properties of null (reading 'map')`. That names the failing call but not why `products` was null. Did the fetch return null? Did something clear the list?
+**Console said:** `Uncaught TypeError: Cannot read properties of null (reading 'map')`. That names the failing call but not why `products` was null. Did the fetch return null? Did something clear the list? React added a warning suggesting an error boundary, which doesn't explain the null either.
+
+![Console: Uncaught TypeError: Cannot read properties of null (reading 'map') at ProductCatalog.tsx:55:36](docs/debugging/bug1-console.png)
 
 **Tool:** Chrome DevTools → **Sources** → line breakpoint on `src/components/ProductCatalog.tsx:55` (`const publicProducts = products!.map(toPublicProduct)`), then reload.
 
@@ -24,6 +28,8 @@ status:      "loading"
 inStockOnly: false
 saleCount:   0
 ```
+
+![Sources panel paused on ProductCatalog.tsx line 55, with products: null and status: "loading" in the Scope pane](docs/debugging/bug1-breakpoint.png)
 
 The Network tab had no request for the products file. The component threw during its first render, before `useEffect` could start the fetch. So the fetch never returned null. `useState<Product[] | null>(null)` made the first render run with no data, and the `!` in `products!.map` told TypeScript not to worry about it.
 
@@ -37,6 +43,8 @@ The Network tab had no request for the products file. The component threw during
 
 **Console said:** `SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON`. It gave no URL and no status code, and it made the server look like it was sending broken JSON.
 
+![Console: SyntaxError: Unexpected token '<', "<!doctype "... is not valid JSON](docs/debugging/bug2-console.png)
+
 **Tool:** Chrome DevTools → **Network** tab, filtered to Fetch/XHR, then reload.
 
 **What it showed:**
@@ -49,6 +57,12 @@ Content-Type:  text/html
 Response:      <!doctype html> <html lang="en"> ...   (the app's index.html)
 ```
 
+![Network tab filtered to Fetch/XHR: two prodcuts.json rows, status 200, type fetch, initiator products.ts:27](docs/debugging/bug2-network-list.png)
+
+![Headers tab: Request URL /api/prodcuts.json, Status Code 200 OK, Content-Type text/html](docs/debugging/bug2-network-headers.png)
+
+![Response tab: the body is the app's index.html, not JSON](docs/debugging/bug2-network-response.png)
+
 The Name column exposed the typo. The status and content type explained why the code didn't catch it. Vite's dev server answers any unknown path with `index.html` and a `200`, so `response.ok` was `true`, and `response.json()` choked on the HTML. There were two rows for the same URL because React StrictMode runs effects twice in development.
 
 **Fix (`4017e9a`):** `PRODUCTS_URL = '/api/products.json'`. The Network tab now shows `200` with `Content-Type: application/json`, and all six products render.
@@ -58,6 +72,8 @@ The Name column exposed the typo. The status and content type explained why the 
 ## Bug 3: Silent wrong value from a misspelled prop name
 
 **Symptom:** Products loaded, but Mechanical Keyboard showed **$89.99** and 1080p Webcam **$59.99**, with no sale price and no "−20%" badge, even though `products.json` gives them 20% and 15% off. They should have shown $71.99 and $50.99. Nothing crashed.
+
+![Product catalog with every product at full price and no sale badges](docs/debugging/bug3-symptom.png)
 
 **Console said:** Nothing. No errors, no warnings.
 
@@ -71,6 +87,10 @@ ProductCard  props  product: { id: 1, name: "Mechanical Keyboard", price: 89.99,
 PriceTag     props  price: 89.99
                     percentOf: 20          <- no percentOff
 ```
+
+![React DevTools with the first PriceTag selected: props percentOf: 20 and price: 89.99, rendered by ProductCard](docs/debugging/bug3-pricetag-props.png)
+
+![React DevTools with ProductCard key="1" selected: product.discount is {percentOff: 20} for Mechanical Keyboard](docs/debugging/bug3-productcard-props.png)
 
 The discount data arrived at `ProductCard` intact and got lost on the way into `PriceTag`. `ProductCard` passed `percentOf`, but `PriceTag` reads `percentOff`. It got `undefined`, and `percentOff ?? 0` quietly turned that into "no discount". The `??` fallback is what kept the typo silent.
 

@@ -36,7 +36,7 @@ export interface ProductFormData {
   costPrice: string
 }
 
-// While the person is typing, any field may still be missing.
+// While the person is typing, each field may still be missing.
 export type ProductDraft = Partial<ProductFormData>
 
 // At most one message per form field, keyed by the same names as the form.

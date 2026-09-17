@@ -6,7 +6,7 @@ function isRecord(value: unknown): value is Record<string, unknown> {
   return typeof value === 'object' && value !== null
 }
 
-// response.json() is typed as any, so the result starts as unknown and has to earn the Product type here.
+// response.json() is untyped, so the result starts as unknown and has to earn the Product type here.
 function isProduct(value: unknown): value is Product {
   return (
     isRecord(value) &&

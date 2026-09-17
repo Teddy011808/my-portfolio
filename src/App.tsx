@@ -1,4 +1,4 @@
-import ContactLink from '@/components/ContactLink'
+import ContactLink, { type ContactLinkProps } from '@/components/ContactLink'
 import ProductCatalog from '@/components/ProductCatalog'
 import ProjectCard from '@/components/ProjectCard'
 import Section from '@/components/Section'
@@ -22,9 +22,9 @@ const projects: Project[] = [
   },
 ]
 
-const skills = ['React', 'JSX', 'Tailwind CSS', 'shadcn/ui', 'Git & GitHub']
+const skills: string[] = ['React', 'JSX', 'Tailwind CSS', 'shadcn/ui', 'Git & GitHub']
 
-const links = [
+const links: ContactLinkProps[] = [
   { label: 'GitHub', value: '@Teddy011808', href: 'https://github.com/Teddy011808' },
   { label: 'Source code', value: 'my-portfolio', href: 'https://github.com/Teddy011808/my-portfolio' },
 ]
@@ -65,7 +65,7 @@ function App() {
             <Section title="Projects">
               <div className="grid gap-4 lg:grid-cols-2">
                 {projects.map((project) => (
-                  <ProjectCard key={project.title} {...project} />
+                  <ProjectCard key={project.title} project={project} />
                 ))}
               </div>
             </Section>

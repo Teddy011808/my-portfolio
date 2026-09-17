@@ -1,6 +1,6 @@
 import { ArrowUpRight } from 'lucide-react'
 
-interface ContactLinkProps {
+export interface ContactLinkProps {
   label: string
   value: string
   href: string

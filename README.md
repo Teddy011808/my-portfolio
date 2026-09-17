@@ -9,6 +9,11 @@ My developer portfolio, built with React, Vite, Tailwind CSS, and shadcn/ui.
   - "In stock only" filter and a red sale counter that only appears after the first sale
   - Controlled "Add product" form (name + price) with inline validation errors
   - `Product` and form data described with interfaces in `src/types.ts`
+- **Version 4:** types locked down end to end, plus a bug hunt with browser DevTools.
+  - Props interfaces on every component, typed `ChangeEvent` handlers, `useState<Product[]>`, and no `any` (oxlint's `typescript/no-explicit-any` rule enforces it)
+  - The catalog loads from `/api/products.json`; the response starts as `unknown` and is narrowed with type guards
+  - Derived types instead of repeated ones: `PublicProduct = Omit<Product, 'costPrice'>`, `ProductDraft = Partial<ProductFormData>`, and `?.` with `??` for optional values like `product.discount?.percentOff`
+  - Three planted bugs (a crash, a network failure, a silent wrong value), each found with a different DevTools tool and written up in [DEBUGGING_JOURNAL.md](DEBUGGING_JOURNAL.md)
 
 ## Built with
 

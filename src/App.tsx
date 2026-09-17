@@ -1,4 +1,4 @@
-import ContactLink from '@/components/ContactLink'
+import ContactLink, { type ContactLinkProps } from '@/components/ContactLink'
 import ProductCatalog from '@/components/ProductCatalog'
 import ProjectCard from '@/components/ProjectCard'
 import Section from '@/components/Section'
@@ -22,9 +22,9 @@ const projects: Project[] = [
   },
 ]
 
-const skills = ['React', 'JSX', 'Tailwind CSS', 'shadcn/ui', 'Git & GitHub']
+const skills: string[] = ['React', 'JSX', 'Tailwind CSS', 'shadcn/ui', 'Git & GitHub']
 
-const links = [
+const links: ContactLinkProps[] = [
   { label: 'GitHub', value: '@Teddy011808', href: 'https://github.com/Teddy011808' },
   { label: 'Source code', value: 'my-portfolio', href: 'https://github.com/Teddy011808/my-portfolio' },
 ]
@@ -57,15 +57,15 @@ function App() {
               <p className="text-gray-700">
                 I'm working through a hands-on React course and building this portfolio one lesson at a time.
                 Version 1 was a hand-built profile page; version 2 added Tailwind CSS, a responsive layout, and
-                components from shadcn/ui; version 3 adds a product catalog driven by React state, written in
-                TypeScript.
+                components from shadcn/ui; version 3 added a product catalog driven by React state, written in
+                TypeScript; version 4 tightens the types and hunts bugs with browser DevTools.
               </p>
             </Section>
 
             <Section title="Projects">
               <div className="grid gap-4 lg:grid-cols-2">
                 {projects.map((project) => (
-                  <ProjectCard key={project.title} {...project} />
+                  <ProjectCard key={project.title} project={project} />
                 ))}
               </div>
             </Section>

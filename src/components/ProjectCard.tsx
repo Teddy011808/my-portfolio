@@ -12,7 +12,12 @@ import {
 } from '@/components/ui/card'
 import type { Project } from '@/types'
 
-function ProjectCard({ title, description, status, tech, href }: Project) {
+interface ProjectCardProps {
+  project: Project
+}
+
+function ProjectCard({ project }: ProjectCardProps) {
+  const { title, description, status, tech, href } = project
   const isCompleted = status === 'Completed'
 
   return (

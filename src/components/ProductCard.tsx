@@ -1,11 +1,10 @@
+import PriceTag from '@/components/PriceTag'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import type { Product } from '@/types'
-
-const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
+import type { PublicProduct } from '@/types'
 
 interface ProductCardProps {
-  product: Product
+  product: PublicProduct
   onBuy: () => void
 }
 
@@ -21,7 +20,7 @@ function ProductCard({ product, onBuy }: ProductCardProps) {
           {product.inStock ? 'In stock' : 'Sold out'}
         </Badge>
       </div>
-      <p className="text-lg font-semibold text-gray-900">{currency.format(product.price)}</p>
+      <PriceTag price={product.price} percentOff={product.discount?.percentOff} />
       <Button variant="outline" className="mt-auto" disabled={!product.inStock} onClick={onBuy}>
         {product.inStock ? 'Buy' : 'Unavailable'}
       </Button>

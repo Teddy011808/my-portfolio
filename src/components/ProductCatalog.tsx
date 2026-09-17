@@ -1,8 +1,8 @@
-import { useState, type ReactNode } from 'react'
+import { useEffect, useState, type ReactNode } from 'react'
 import AddProductForm from '@/components/AddProductForm'
 import ProductCard from '@/components/ProductCard'
-import { initialProducts } from '@/data/products'
-import type { Product } from '@/types'
+import { fetchProducts } from '@/lib/products'
+import type { LoadStatus, Product } from '@/types'
 
 interface FilterButtonProps {
   isActive: boolean
@@ -28,9 +28,29 @@ function FilterButton({ isActive, onClick, children }: FilterButtonProps) {
 }
 
 function ProductCatalog() {
-  const [products, setProducts] = useState<Product[]>(initialProducts)
+  const [products, setProducts] = useState<Product[]>([])
+  const [status, setStatus] = useState<LoadStatus>('loading')
   const [inStockOnly, setInStockOnly] = useState(false)
   const [saleCount, setSaleCount] = useState(0)
+
+  useEffect(() => {
+    // Ignore a response that arrives after unmount (StrictMode mounts twice in dev).
+    let ignore = false
+    fetchProducts()
+      .then((loaded) => {
+        if (ignore) return
+        setProducts((prev) => [...loaded, ...prev])
+        setStatus('success')
+      })
+      .catch((error: unknown) => {
+        if (ignore) return
+        console.error(error)
+        setStatus('error')
+      })
+    return () => {
+      ignore = true
+    }
+  }, [])
 
   const visibleProducts = inStockOnly ? products.filter((product) => product.inStock) : products
 
@@ -46,9 +66,11 @@ function ProductCatalog() {
       <div className="lg:col-span-2">
         <div className="flex flex-wrap items-center justify-between gap-4">
           <div className="flex items-center gap-2">
-            <p className="text-sm font-medium text-gray-700">
-              {visibleProducts.length} {visibleProducts.length === 1 ? 'product' : 'products'}
-            </p>
+            {status === 'success' && (
+              <p className="text-sm font-medium text-gray-700">
+                {visibleProducts.length} {visibleProducts.length === 1 ? 'product' : 'products'}
+              </p>
+            )}
             {saleCount > 0 && (
               <span className="rounded-full bg-red-600 px-2 py-1 text-xs font-semibold text-white">
                 {saleCount} {saleCount === 1 ? 'sale' : 'sales'}
@@ -66,11 +88,19 @@ function ProductCatalog() {
           </div>
         </div>
 
-        <ul className="mt-4 grid gap-4 sm:grid-cols-2">
-          {visibleProducts.map((product) => (
-            <ProductCard key={product.id} product={product} onBuy={() => setSaleCount((count) => count + 1)} />
-          ))}
-        </ul>
+        {status === 'loading' && <p className="mt-4 text-sm text-gray-500">Loading products…</p>}
+        {status === 'error' && (
+          <p role="alert" className="mt-4 text-sm text-red-600">
+            Couldn't load products. Refresh the page to try again.
+          </p>
+        )}
+        {status === 'success' && (
+          <ul className="mt-4 grid gap-4 sm:grid-cols-2">
+            {visibleProducts.map((product) => (
+              <ProductCard key={product.id} product={product} onBuy={() => setSaleCount((count) => count + 1)} />
+            ))}
+          </ul>
+        )}
       </div>
 
       <div className="self-start rounded-xl bg-gray-50 p-4 ring-1 ring-gray-200">

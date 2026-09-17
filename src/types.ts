@@ -13,6 +13,8 @@ export interface Product {
   inStock: boolean
 }
 
+export type LoadStatus = 'loading' | 'success' | 'error'
+
 // Form inputs always hold strings, so price stays a string until it passes validation.
 export interface ProductFormData {
   name: string

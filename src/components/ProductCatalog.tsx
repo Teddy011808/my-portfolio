@@ -1,8 +1,8 @@
 import { useEffect, useState, type ReactNode } from 'react'
 import AddProductForm from '@/components/AddProductForm'
 import ProductCard from '@/components/ProductCard'
-import { fetchProducts } from '@/lib/products'
-import type { LoadStatus, Product } from '@/types'
+import { fetchProducts, toPublicProduct } from '@/lib/products'
+import type { LoadStatus, NewProductFields, Product } from '@/types'
 
 interface FilterButtonProps {
   isActive: boolean
@@ -52,12 +52,13 @@ function ProductCatalog() {
     }
   }, [])
 
-  const visibleProducts = inStockOnly ? products.filter((product) => product.inStock) : products
+  const publicProducts = products.map(toPublicProduct)
+  const visibleProducts = inStockOnly ? publicProducts.filter((product) => product.inStock) : publicProducts
 
-  function handleAdd(name: string, price: number) {
+  function handleAdd(fields: NewProductFields) {
     setProducts((prev) => [
       ...prev,
-      { id: Math.max(0, ...prev.map((product) => product.id)) + 1, name, price, inStock: true },
+      { ...fields, id: Math.max(0, ...prev.map((product) => product.id)) + 1, inStock: true },
     ])
   }
 

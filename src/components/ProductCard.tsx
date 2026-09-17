@@ -1,11 +1,11 @@
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
-import type { Product } from '@/types'
+import type { PublicProduct } from '@/types'
 
 const currency = new Intl.NumberFormat('en-US', { style: 'currency', currency: 'USD' })
 
 interface ProductCardProps {
-  product: Product
+  product: PublicProduct
   onBuy: () => void
 }
 

@@ -1,4 +1,4 @@
-import type { Product } from '@/types'
+import type { Product, PublicProduct } from '@/types'
 
 export const PRODUCTS_URL = '/api/products.json'
 
@@ -13,7 +13,8 @@ function isProduct(value: unknown): value is Product {
     typeof value.id === 'number' &&
     typeof value.name === 'string' &&
     typeof value.price === 'number' &&
-    typeof value.inStock === 'boolean'
+    typeof value.inStock === 'boolean' &&
+    typeof value.costPrice === 'number'
   )
 }
 
@@ -32,4 +33,9 @@ export async function fetchProducts(): Promise<Product[]> {
     throw new Error('Response is not a list of products')
   }
   return data
+}
+
+// Strip internal fields at runtime too, so costPrice never reaches a component's props.
+export function toPublicProduct({ costPrice: _costPrice, ...publicFields }: Product): PublicProduct {
+  return publicFields
 }

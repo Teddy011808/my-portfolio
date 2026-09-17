@@ -20,7 +20,7 @@ function ProductCard({ product, onBuy }: ProductCardProps) {
           {product.inStock ? 'In stock' : 'Sold out'}
         </Badge>
       </div>
-      <PriceTag price={product.price} percentOf={product.discount?.percentOff} />
+      <PriceTag price={product.price} percentOff={product.discount?.percentOff} />
       <Button variant="outline" className="mt-auto" disabled={!product.inStock} onClick={onBuy}>
         {product.inStock ? 'Buy' : 'Unavailable'}
       </Button>
